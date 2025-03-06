@@ -27,12 +27,31 @@ const server = http.createServer((req, res) => {
         }
         else if(path.startsWith('/status/')) {
             const statusCode = parseInt(path.split('/')[2]);
+            if(!statusCode) {
+                res.writeHead(400, {'Content-Type': 'text/plain'});
+                res.end('Bad Request: Status code is missing or invalid');
+            }
+            else
             handlestatusCode(req, res, statusCode);
         }
         else if(path.startsWith('/delay/')) {
             const delay = parseInt(path.split('/')[2]);
+            if(!delay) {
+                res.writeHead(400, {'Content-Type': 'text/plain'});
+                res.end('Bad Request: Delay parameter is missing or invalid');
+            }
+            else
             handleDelay(req, res, delay);
         }
+
+        else {
+            res.writeHead(404, {'Content-Type': 'text/plain'});
+            res.end('404 Not Found: The requested endpoint does not exist');
+        }
+    }
+    else {
+        res.writeHead(405, {'Content-Type': 'text/plain'});
+        res.end('Method not allowed')
     }
 })
 
